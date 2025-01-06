@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
+# To compare oversampling to none---------------------------------------------------------------------------------------
 oversample = True if input('Press "y" for oversampling and "x" for no oversampling.') == 'y' else False
 
 # Get the absolute path of the folder-----------------------------------------------------------------------------------
