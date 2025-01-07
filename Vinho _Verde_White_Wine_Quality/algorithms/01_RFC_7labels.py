@@ -39,12 +39,14 @@ if out != 'There are no duplicates.':
 plt.figure(figsize=(6, 4), dpi=100)
 sns.countplot(data=df_initial, x='quality')
 df_initial['quality'].value_counts()
+plt.savefig('01_RFC_7labels_figure_01', dpi=100)
 plt.show()
 
 # Checking for correlation matrix---------------------------------------------------------------------------------------
 plt.figure(figsize=(12, 8), dpi=100)
 sns.heatmap(df_initial.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
-plt.show()
+plt.savefig('01_RFC_7labels_figure_02', dpi=100)
+
 
 # Selecting highly correlated features to the target variable-----------------------------------------------------------
 relevant_features = df_initial.corr()['quality'][abs(df_initial.corr()['quality']) > 0.1]
@@ -58,6 +60,7 @@ df_relevant = df_initial[columns_to_keep]
 # Check for multicollinearity between the features----------------------------------------------------------------------
 plt.figure(figsize=(12, 8), dpi=100)
 sns.heatmap(df_relevant.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
+plt.savefig('01_RFC_7labels_figure_03', dpi=100)
 plt.show()
 
 # Delete density as it has high correlation with alcohol----------------------------------------------------------------
@@ -97,6 +100,7 @@ if oversample:
     plt.figure(figsize=(6, 4), dpi=100)
     sns.countplot(data=df_oversampled, x='quality')
     df_oversampled['quality'].value_counts()
+    plt.savefig('01_RFC_7labels_figure_04', dpi=100)
     plt.show()
 
 # Splitting data into training and testing set--------------------------------------------------------------------------
@@ -135,8 +139,8 @@ plt.xticks(fontsize=20)
 plt.xlabel('Scores', fontsize=20)
 plt.ylabel('Values', fontsize=20)
 plt.gca().yaxis.grid(True, linestyle='-', alpha=0.5)
+plt.savefig('01_RFC_7labels_figure_05', dpi=100)
 plt.show()
-
 
 
 
