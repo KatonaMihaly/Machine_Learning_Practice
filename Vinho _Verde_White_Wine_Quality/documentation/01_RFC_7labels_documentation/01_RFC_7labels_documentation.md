@@ -126,13 +126,44 @@ _The matrix shows that alcohol content is highly correlated to the density of th
 delete density as higher alcohol content has higher correlation to the target variable. To check their effect there will
 be two different path shown. One without density and one without alcohol features._
 
-A direction without the density feature and without oversampling.
+A direction without the density feature vs. without alcohol feature and without oversampling.
 -
 
-![Fig_04](01_RFC_7labels_figure_alcohol_notoversampled.png)
+<div style="display: flex; justify-content: space-around;">
 
-**Figure 4: 
+<div>
+<img src="01_RFC_7labels_figure_alcohol_notoversampled.png" alt="Fig_04" width="100%">
+<p style="text-align: center;">Figure 4: Evaluation metrics without density feature.</p>
+</div>
 
+<div>
+<img src="01_RFC_7labels_figure_density_notoversampled.png" alt="Fig_05" width="100%">
+<p style="text-align: center;">Figure 5: Evaluation metrics without alcohol feature.</p>
+</div>
 
+</div>
 
+_Mean Absolute Error (MAE): MAE measures the average absolute difference between predicted and actual values, treating 
+all errors equally regardless of their direction. It provides a clear understanding of how far predictions are, on 
+average, from actual values, making it easy to interpret. (Lower the better!)_
+
+_Mean Squared Error (MSE): MSE calculates the average of squared differences between predicted and actual values, 
+emphasizing larger errors by squaring them. This makes MSE highly sensitive to outliers, which can be beneficial when 
+larger errors need to be penalized more heavily in certain applications. (Lower the better!)_
+
+_Root Mean Squared Error (RMSE): RMSE is the square root of MSE and provides a single measure of prediction error, 
+expressed in the same units as the target variable. It offers a more interpretable metric for evaluating model 
+performance and highlights significant errors due to its sensitivity to larger deviations. (Lower the better!) RMSE is 
+the root of MSE. It should be lower than MSE except 0 < MSE < 1._
+
+_R-squared (R²): R² represents the proportion of variance in the target variable that is explained by the model,
+ranging from 0 to 1, where higher values indicate better fit. It provides insight into how well the model captures the 
+relationships in the data, helping assess overall effectiveness and goodness-of-fit. (Higher the better!)_
+
+_From the figures it can be seen that there are no significant difference between the two
+solutions. It means that deleting the highly multicolinear alcohol or denstity feature does not 
+affects the precision of the model._
+
+Hold both the density and alcohol feature without oversampling.
+-
 
