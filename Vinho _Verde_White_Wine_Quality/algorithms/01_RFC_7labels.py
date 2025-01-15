@@ -13,7 +13,9 @@ from sklearn.model_selection import train_test_split
 
 # To compare oversampling to none---------------------------------------------------------------------------------------
 oversample = True if input('Press "y" for oversampling and "x" for no oversampling.') == 'y' else False
-feature_selection = True if input('Press "y" for alcohol feature and "x" for density feature.') == 'y' else False
+both = True if input('Press "y" for both features and "x" for without both features.') == 'y' else False
+if not both:
+    feature_selection = True if input('Press "y" for alcohol feature and "x" for density feature.') == 'y' else False
 
 # Get the absolute path of the folder-----------------------------------------------------------------------------------
 folder_path = os.path.dirname(os.path.abspath(__file__))
@@ -65,11 +67,14 @@ plt.savefig('01_RFC_7labels_figure_03', dpi=100)
 plt.show()
 
 # Delete density as it has high correlation with alcohol----------------------------------------------------------------
-if feature_selection:
-    del df_relevant['density']
+if not both:
+    if feature_selection:
+        del df_relevant['density']
+    else:
+        del df_relevant['alcohol']
 else:
+    del df_relevant['density']
     del df_relevant['alcohol']
-
 df_temp = df_initial.copy(deep=True)
 
 # Oversampling underrepresented target variables------------------------------------------------------------------------
@@ -104,7 +109,7 @@ if oversample:
     plt.figure(figsize=(6, 4), dpi=100)
     sns.countplot(data=df_oversampled, x='quality')
     df_oversampled['quality'].value_counts()
-    plt.savefig(f'01_RFC_7labels_figure_{"alcohol" if feature_selection else "density"}', dpi=100)
+    plt.savefig(f'01_RFC_7labels_figure_{"both" if both else "wboth" if not both else "alcohol" if feature_selection else "density"}', dpi=100)
     plt.show()
 
 # Splitting data into training and testing set--------------------------------------------------------------------------
@@ -143,7 +148,7 @@ plt.xticks(fontsize=20)
 plt.xlabel('Scores', fontsize=20)
 plt.ylabel('Values', fontsize=20)
 plt.gca().yaxis.grid(True, linestyle='-', alpha=0.5)
-plt.savefig(f'01_RFC_7labels_figure_{"alcohol" if feature_selection else "density"}_'
+plt.savefig(f'01_RFC_7labels_figure_{"both" if both else "wboth" if not both else "alcohol" if feature_selection else "density"}_'
             f'{"oversampled" if oversample else "notoversampled"}', dpi=100)
 plt.show()
 

@@ -164,6 +164,22 @@ _From the figures it can be seen that there are no significant difference betwee
 solutions. It means that deleting the highly multicolinear alcohol or denstity feature does not 
 affects the precision of the model._
 
-Hold both the density and alcohol feature without oversampling.
+Hold or delete both the density and alcohol feature without oversampling.
 -
 
+<div style="display: flex; justify-content: space-around;">
+
+<div>
+<img src="01_RFC_7labels_figure_both_notoversampled.png" alt="Fig_06" width="100%">
+<p style="text-align: center;">Figure 6: Evaluation metrics without both density and alcohol features.</p>
+</div>
+
+<div>
+<img src="01_RFC_7labels_figure_wboth_notoversampled.png" alt="Fig_06" width="100%">
+<p style="text-align: center;">Figure 7: Evaluation metrics without both alcohol and density features.</p>
+</div>
+
+</div>
+
+_It can be seen that there are no significant differences in the metric result in any case. Meaning a deleting both
+features could decrease the model complexity without alcohol and dennsity features._
