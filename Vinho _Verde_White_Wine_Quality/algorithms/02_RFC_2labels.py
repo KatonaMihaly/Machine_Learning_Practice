@@ -28,7 +28,7 @@ df_two_label = df_initial.copy(deep=True)
 df_two_label['quality'] = [1 if df_initial['quality'][i] > 5 else 0 for i in range(len(df_initial))]
 
 # Checking for missing values-------------------------------------------------------------------------------------------
-print(out := 'There are missing values!' if (df_initial.isna().sum() != 0).any() else 'There are no missing values.')
+print(out := 'There are missing values!' if (df_two_label.isna().sum() != 0).any() else 'There are no missing values.')
 print()
 if out == 'There are missing values!':
     print(df_two_label.isna().sum())

@@ -20,14 +20,28 @@ oversample = True if input('Press "y" for oversampling and "x" for no oversampli
 _This line asks the user for an input of "y" meaning yes or "x" meaning no whether to use oversampling or not.
 The goal is to compare the effect of oversampling of the underrepresented target variable values._
 
+```python
+# Open the .csv file; the with function ensure that the .csv is closed after use----------------------------------------
+with open(folder_path + '/initial_data/white_wine_quality.csv', 'r') as f:
+    df_initial = pd.read_csv(f, sep=';')
+
+# Create a deepcopy of the initial dataframe to modify it with 'good' if quality > 5 else 'bad'
+df_two_label = df_initial.copy(deep=True)
+
+df_two_label['quality'] = [1 if df_initial['quality'][i] > 5 else 0 for i in range(len(df_initial))]
+```
+
+_The difference from 01_RFC_7labels is that here the labels are compacted into two 'good' or 'bad' labels._
+
 Checking for missing values.
 -
 ```python
-    print(out := 'There are missing values!' if (df_initial.isna().sum() != 0).any() else 'There are no missing values.')
+# Checking for missing values-------------------------------------------------------------------------------------------
+print(out := 'There are missing values!' if (df_two_label.isna().sum() != 0).any() else 'There are no missing values.')
+print()
+if out == 'There are missing values!':
+    print(df_two_label.isna().sum())
     print()
-    if out == 'There are missing values!':
-        print(df_initial.isna().sum())
-        print()
 ```
 _One should check for missing values in the dataset. There a many different methods to substitute
 missing values in the dataset which will be covered in another dataset. In the present dataset if 
@@ -36,11 +50,12 @@ a missing value is encountered, it was deleted. Fortuantely the dataset is whole
 Checking and removing the duplicate data.
 -
 ```python
-print(out := f'There are {df_initial.duplicated().sum()} duplicates!' if df_initial.duplicated().sum() != 0 else
+# Checking and removing the duplicate data------------------------------------------------------------------------------
+print(out := f'There are {df_two_label.duplicated().sum()} duplicates!' if df_two_label.duplicated().sum() != 0 else
       'There are no duplicates.')
 print()
-if out != 'There are no duplicates.':
-    df_initial.drop_duplicates(keep='first')
+df_two_label = df_two_label.drop_duplicates(keep='first')
+df_two_label.reset_index(drop=True, inplace=True)
 ```
 
 _One should check for duplicate entry in the dataset because duplicate data can cause a bias causing
@@ -57,7 +72,7 @@ plt.show()
 _It is important to check for the target variable distribution because if the target variable is imbalanced, the model may favor the majority class or region of the distribution.
 This can result in poor performance for minority classes or regions, which may be critical for the problem you're solving._
 
-![Fig_01](01_RFC_7labels_figure_01.png)
+![Fig_01](02_RFC_2labels_figure_01.png)
 
 **Figure 1: Quality distribution of the initial data.**
 
@@ -68,15 +83,17 @@ one is oversampling. The difference between the initial and oversampled dataset 
 Checking for correlation matrix.
 -
 ```python
+# Checking for correlation matrix---------------------------------------------------------------------------------------
 plt.figure(figsize=(12, 8), dpi=100)
-sns.heatmap(df_initial.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
-plt.savefig('01_RFC_7labels_figure_02', dpi=100)
+sns.heatmap(df_two_label.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
+plt.savefig('02_RFC_7labels_figure_02', dpi=100)
+plt.show()
 ```
 
 _Features with low correlation to the target variable may have little predictive power.
 Features with high correlation to the target can be prioritized, helping reduce dimensionality and improve model efficiency._
 
-![Fig_02](01_RFC_7labels_figure_02.png)
+![Fig_02](02_RFC_2labels_figure_02.png)
 
 **Figure 2: Correlation matrix of the initial data.**
 
@@ -88,12 +105,10 @@ correlation should be excluded from the future investigation._
 Selecting highly correlated features to the target variable.
 -
 ```python
-relevant_features = df_initial.corr()['quality'][abs(df_initial.corr()['quality']) > 0.1]
+# Selecting highly correlated features to the target variable-----------------------------------------------------------
+relevant_features = df_two_label.corr()['quality'][abs(df_two_label.corr()['quality']) > 0.1]
 print(relevant_features)
 print()
-
-columns_to_keep = relevant_features.index.tolist()
-df_relevant = df_initial[columns_to_keep]
 ```
 _This line selects the relevant features explained beforehand._
 
@@ -103,12 +118,8 @@ Check for multicollinearity between the features.
 ```python
 plt.figure(figsize=(12, 8), dpi=100)
 sns.heatmap(df_relevant.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
-plt.savefig('01_RFC_7labels_figure_03', dpi=100)
+plt.savefig('02_RFC_7labels_figure_03', dpi=100)
 plt.show()
-
-del df_relevant['density']
-
-df_temp = df_initial.copy(deep=True)
 ```
 _Checking for multicollinearity is essential because it helps identify redundant information in features, which can
 increase model complexity and lead to overfitting without adding predictive value. Additionally, it complicates the 
@@ -118,7 +129,7 @@ redundant variables over weaker but valuable signals. Many machine learning algo
 minimal correlation between features, and multicollinearity can violate these assumptions, leading to inaccurate or 
 suboptimal results._
 
-![Fig_03](01_RFC_7labels_figure_03.png)
+![Fig_03](02_RFC_7labels_figure_03.png)
 
 **Figure 3: Multicolinearity matrix of the initial data.**
 
@@ -126,46 +137,91 @@ _The matrix shows that alcohol content is highly correlated to the density of th
 delete density as higher alcohol content has higher correlation to the target variable. To check their effect there will
 be two different path shown. One without density and one without alcohol features._
 
-A direction without the density feature vs. without alcohol feature and without oversampling.
+Without oversampling or with it.
 -
 
 <div style="display: flex; justify-content: space-around;">
 
 <div>
-<img src="01_RFC_7labels_figure_alcohol_notoversampled.png" alt="Fig_04" width="100%">
-<p style="text-align: center;">Figure 4: Evaluation metrics without density feature.</p>
+<img src="02_RFC_7labels_figure_05.png" alt="Fig_04" width="100%">
+<p style="text-align: center;">Figure 4: Confusion matrix with oversampling.</p>
 </div>
 
 <div>
-<img src="01_RFC_7labels_figure_density_notoversampled.png" alt="Fig_05" width="100%">
-<p style="text-align: center;">Figure 5: Evaluation metrics without alcohol feature.</p>
+<img src="02_RFC_7labels_figure_08.png" alt="Fig_05" width="100%">
+<p style="text-align: center;">Figure 5: Confusion matrix without oversampling.</p>
 </div>
 
 </div>
 
-_Mean Absolute Error (MAE): MAE measures the average absolute difference between predicted and actual values, treating 
-all errors equally regardless of their direction. It provides a clear understanding of how far predictions are, on 
-average, from actual values, making it easy to interpret. (Lower the better!)_
+_For a binary classification problem, the confusion matrix is the following layout:_
 
-_Mean Squared Error (MSE): MSE calculates the average of squared differences between predicted and actual values, 
-emphasizing larger errors by squaring them. This makes MSE highly sensitive to outliers, which can be beneficial when 
-larger errors need to be penalized more heavily in certain applications. (Lower the better!)_
+|                | **Predicted Positive** | **Predicted Negative** |
+|----------------|-------------------------|-------------------------|
+| **Actual Positive** | True Positive (TP)       | False Negative (FN)      |
+| **Actual Negative** | False Positive (FP)      | True Negative (TN)       |
 
-_Root Mean Squared Error (RMSE): RMSE is the square root of MSE and provides a single measure of prediction error, 
-expressed in the same units as the target variable. It offers a more interpretable metric for evaluating model 
-performance and highlights significant errors due to its sensitivity to larger deviations. (Lower the better!) RMSE is 
-the root of MSE. It should be lower than MSE except 0 < MSE < 1._
+_True Positive (TP): Correctly predicted positives (e.g., the model predicts "yes," and the actual value is "yes")._
 
-_R-squared (R²): R² represents the proportion of variance in the target variable that is explained by the model,
-ranging from 0 to 1, where higher values indicate better fit. It provides insight into how well the model captures the 
-relationships in the data, helping assess overall effectiveness and goodness-of-fit. (Higher the better!)_
+_False Negative (FN): Incorrectly predicted negatives (e.g., the model predicts "no," but the actual value is "yes")._
 
-_From the figures it can be seen that there are no significant difference between the two
-solutions. It means that deleting the highly multicolinear alcohol or denstity feature does not 
-affects the precision of the model._
+_False Positive (FP): Incorrectly predicted positives (e.g., the model predicts "yes," but the actual value is "no")._
 
-Hold or delete both the density and alcohol feature without oversampling.
+_True Negative (TN): Correctly predicted negatives (e.g., the model predicts "no," and the actual value is "no")._
+
+### Key Metrics Derived from the Confusion Matrix
+
+1. **Accuracy**: Proportion of correct predictions (true positives and true negatives) out of all predictions.
+
+Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+2. **Precision (Positive Predictive Value)**: Fraction of positive predictions that are actually correct.
+
+Precision = TP / (TP + FP)
+
+3. **Recall (Sensitivity or True Positive Rate)**: Fraction of actual positives that the model correctly identifies.
+
+Recall = TP / (TP + FN)
+
+4. **F1-Score**: Harmonic mean of precision and recall, balancing their trade-off.
+
+F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
+
+5. **Specificity (True Negative Rate)**: Fraction of actual negatives that the model correctly identifies.
+
+Specificity = TN / (TN + FP)
+
+### Confusion Matrix Metrics Summary
+
+| **Metric**     | **Oversampled**   | **Without oversampling** | **Difference** |
+|----------------|-------------------|--------------------------|----------------|
+| Accuracy       | 0.881 (88.1%)     | 0.741 (74.1%)            | +0.140 (14.0%) |
+| Precision      | 0.910 (91.0%)     | 0.787 (78.7%)            | +0.123 (12.3%) |
+| Recall         | 0.843 (84.3%)     | 0.834 (83.4%)            | +0.009 (0.9%)  |
+| F1-Score       | 0.874 (87.4%)     | 0.808 (80.8%)            | +0.066 (6.6%)  |
+| Specificity    | 0.919 (91.9%)     | 0.561 (56.1%)            | +0.358 (35.8%) |
+
+_The table of confusion matrix metrics summary show that..._
+
+K-fold cross validation
 -
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div style="display: flex; justify-content: space-around;">
 
