@@ -51,7 +51,7 @@ plt.show()
 # Checking for correlation matrix---------------------------------------------------------------------------------------
 plt.figure(figsize=(12, 8), dpi=100)
 sns.heatmap(df_two_label.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
-plt.savefig('02_RFC_7labels_figure_02', dpi=100)
+plt.savefig('02_RFC_2labels_figure_02', dpi=100)
 plt.show()
 
 # Selecting highly correlated features to the target variable-----------------------------------------------------------
@@ -66,7 +66,7 @@ df_relevant = df_two_label[columns_to_keep]
 # Check for multicollinearity between the features----------------------------------------------------------------------
 plt.figure(figsize=(12, 8), dpi=100)
 sns.heatmap(df_relevant.corr(), vmin=-1, vmax=1, cmap='icefire', annot=True)
-plt.savefig('02_RFC_7labels_figure_03', dpi=100)
+plt.savefig('02_RFC_2labels_figure_03', dpi=100)
 plt.show()
 
 # Oversampling underrepresented target variables------------------------------------------------------------------------
@@ -86,7 +86,7 @@ if oversample:
     plt.figure(figsize=(6, 4), dpi=100)
     sns.countplot(data=df_oversampled, x='quality')
     df_oversampled['quality'].value_counts()
-    plt.savefig(f'02_RFC_7labels_figure_04', dpi=100)
+    plt.savefig(f'02_RFC_2labels_figure_04', dpi=100)
     plt.show()
 
     # Splitting data into training and testing set----------------------------------------------------------------------
@@ -111,7 +111,7 @@ if oversample:
     plt.title('Confusion Matrix')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
-    plt.savefig(f'02_RFC_7labels_figure_05', dpi=100)
+    plt.savefig(f'02_RFC_2labels_figure_05', dpi=100)
     plt.show()
 
     precision = precision_score(Y_test, Y_prediction)
@@ -163,7 +163,8 @@ if oversample:
     plt.title('MEAN')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'02_RFC_7labels_figure_06', dpi=100)
+    plt.yticks(np.arange(0.5, 1.05, 0.05))
+    plt.savefig(f'02_RFC_2labels_figure_06', dpi=100)
     plt.show()
 
     # Plot each column as a scatter plot
@@ -176,7 +177,8 @@ if oversample:
     plt.title('STD')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'02_RFC_7labels_figure_07', dpi=100)
+    plt.yticks(np.arange(0.0, 0.3, 0.05))
+    plt.savefig(f'02_RFC_2labels_figure_07', dpi=100)
     plt.show()
 
 else:
@@ -205,7 +207,7 @@ else:
     plt.title('Confusion Matrix')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
-    plt.savefig(f'02_RFC_7labels_figure_08', dpi=100)
+    plt.savefig(f'02_RFC_2labels_figure_08', dpi=100)
     plt.show()
 
     precision = precision_score(Y_test, Y_prediction)
@@ -257,7 +259,8 @@ else:
     plt.title('MEAN')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'02_RFC_7labels_figure_09', dpi=100)
+    plt.yticks(np.arange(0.5, 1.05, 0.05))
+    plt.savefig(f'02_RFC_2labels_figure_09', dpi=100)
     plt.show()
 
     # Plot each column as a scatter plot
@@ -270,5 +273,6 @@ else:
     plt.title('STD')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'02_RFC_7labels_figure_10', dpi=100)
+    plt.yticks(np.arange(0.0, 0.3, 0.05))
+    plt.savefig(f'02_RFC_2labels_figure_10', dpi=100)
     plt.show()

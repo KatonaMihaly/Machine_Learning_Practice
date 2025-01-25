@@ -129,7 +129,7 @@ redundant variables over weaker but valuable signals. Many machine learning algo
 minimal correlation between features, and multicollinearity can violate these assumptions, leading to inaccurate or 
 suboptimal results._
 
-![Fig_03](02_RFC_7labels_figure_03.png)
+![Fig_03](02_RFC_2labels_figure_03.png)
 
 **Figure 3: Multicolinearity matrix of the initial data.**
 
@@ -143,12 +143,12 @@ Without oversampling or with it.
 <div style="display: flex; justify-content: space-around;">
 
 <div>
-<img src="02_RFC_7labels_figure_05.png" alt="Fig_04" width="100%">
+<img src="02_RFC_2labels_figure_05.png" alt="Fig_04" width="100%">
 <p style="text-align: center;">Figure 4: Confusion matrix with oversampling.</p>
 </div>
 
 <div>
-<img src="02_RFC_7labels_figure_08.png" alt="Fig_05" width="100%">
+<img src="02_RFC_2labels_figure_08.png" alt="Fig_05" width="100%">
 <p style="text-align: center;">Figure 5: Confusion matrix without oversampling.</p>
 </div>
 
@@ -201,7 +201,23 @@ Specificity = TN / (TN + FP)
 | F1-Score       | 0.874 (87.4%)     | 0.808 (80.8%)            | +0.066 (6.6%)  |
 | Specificity    | 0.919 (91.9%)     | 0.561 (56.1%)            | +0.358 (35.8%) |
 
-_The table of confusion matrix metrics summary show that..._
+_The table of confusion matrix metrics summary show that oversampling of the negative labeled cases
+significantly improves the specificity of the model, meaning increasing the actual negatives that the model correctly 
+identifies. The more samples the model has, it predicts the objectives better. A high F1 score (close to 1) indicates 
+a model with both high precision and high recall. A low F1 score suggests that the model struggles with either 
+precision, recall, or both. To correctly interpret F1 score first we need to interpret precision and recall. High 
+precision indicates that when the model predicts a positive, it is likely correct. High precision is important
+when he cost of a false positive is high, for example fraud detection of banking systems. Oversampling the
+negative labeled cases decreases the false positive predictions thus increasing the precision.
+Precision often comes at the expense of recall. If the model predicts fewer positives (to avoid false positives), it
+may miss some actual positives, lowering recall. High recall means few false negatives which is scrucial in disease 
+screening, high recall ensures most sick patients are identified, even if it means some healthy individuals are flagged.
+Now back to F1 score, high F1 means that there are low amount of false negatives and low amount of false positives.
+Last but not least accuracy indicates the model is making correct predictions most of the time. If a model achieves 95%
+accuracy, it correctly predicts the outcome for 95 out of 100 instances. Accuracy can be misleading in imbalanced 
+datasets when one class significantly outweighs the other. Accuracy is useful when the dataset is balanced positive 
+and negative instances are equally represented. When both classes are equally important (false positives and false
+negatives have similar consequences). Oversampling balances the dataset thus increasing accuracy._
 
 K-fold cross validation
 -
@@ -226,12 +242,12 @@ K-fold cross validation
 <div style="display: flex; justify-content: space-around;">
 
 <div>
-<img src="01_RFC_7labels_figure_both_notoversampled.png" alt="Fig_06" width="100%">
+<img src="02_RFC_2labels_figure_06.png" alt="Fig_06" width="100%">
 <p style="text-align: center;">Figure 6: Evaluation metrics without both density and alcohol features.</p>
 </div>
 
 <div>
-<img src="01_RFC_7labels_figure_wboth_notoversampled.png" alt="Fig_06" width="100%">
+<img src="02_RFC_2labels_figure_09.png" alt="Fig_06" width="100%">
 <p style="text-align: center;">Figure 7: Evaluation metrics without both alcohol and density features.</p>
 </div>
 
