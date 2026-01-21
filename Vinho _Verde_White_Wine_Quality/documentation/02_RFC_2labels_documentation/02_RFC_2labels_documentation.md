@@ -33,6 +33,8 @@ df_two_label['quality'] = [1 if df_initial['quality'][i] > 5 else 0 for i in ran
 
 _The difference from 01_RFC_7labels is that here the labels are compacted into two 'good' or 'bad' labels._
 
+# Exploratory Data Analysis:
+
 Checking for missing values.
 -
 ```python
